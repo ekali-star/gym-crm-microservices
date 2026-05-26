@@ -28,7 +28,10 @@ public class TransactionLoggingFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String transactionId = UUID.randomUUID().toString();
+        String transactionId = request.getHeader(TX_ID_HEADER);
+        if (transactionId == null || transactionId.isBlank()) {
+            transactionId = UUID.randomUUID().toString();
+        }
         MDC.put(TX_ID_MDC_KEY, transactionId);
         response.setHeader(TX_ID_HEADER, transactionId);
 
